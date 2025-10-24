@@ -75,7 +75,7 @@ const App: React.FC = () => {
           type: 'note',
           title: `Análise da Nota: ${note}`,
           content: (
-              <div className="text-gray-300 space-y-3">
+              <div className="text-slate-300 space-y-3">
                   <p className="text-lg"><strong className="font-semibold text-white w-24 inline-block">Grau:</strong> {degree}º</p>
                   <p className="text-lg"><strong className="font-semibold text-white w-24 inline-block">Função:</strong> {functionName}</p>
               </div>
@@ -97,13 +97,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4 sm:p-6 font-sans">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center p-4 sm:p-6">
       <main className="container mx-auto max-w-5xl w-full flex-grow flex flex-col">
         <header className="text-center my-8 sm:my-12">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-500 pb-2">
             Tonalia
           </h1>
-          <p className="mt-2 text-lg sm:text-xl text-gray-400">
+          <p className="mt-2 text-lg sm:text-xl text-slate-400">
             Explore escalas, acordes e campos harmônicos com facilidade.
           </p>
         </header>
@@ -111,7 +111,7 @@ const App: React.FC = () => {
         <div className="flex justify-center mb-8">
             <button
                 onClick={() => setShowAllScales(!showAllScales)}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-bold text-white transition-all duration-200 ease-in-out shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500"
+                className="px-6 py-3 bg-gradient-to-br from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 rounded-lg font-bold text-white transition-all duration-300 ease-in-out shadow-lg shadow-sky-500/20 hover:shadow-xl hover:shadow-sky-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-sky-400 transform hover:-translate-y-0.5"
             >
                 {showAllScales ? 'Voltar para Análise Individual' : 'Ver Todas as Escalas Maiores'}
             </button>
@@ -123,8 +123,10 @@ const App: React.FC = () => {
             <AllScalesDisplay chordType={chordType} enharmonicPreference={enharmonicPreference} />
         ) : (
             <>
-                <EnharmonicPreferenceSelector selectedPreference={enharmonicPreference} onPreferenceSelect={handleEnharmonicSelect} />
-                <ScaleTypeSelector selectedType={scaleType} onTypeSelect={setScaleType} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  <EnharmonicPreferenceSelector selectedPreference={enharmonicPreference} onPreferenceSelect={handleEnharmonicSelect} />
+                  <ScaleTypeSelector selectedType={scaleType} onTypeSelect={setScaleType} />
+                </div>
                 <KeySelector selectedKey={selectedKey} onKeySelect={setSelectedKey} enharmonicPreference={enharmonicPreference} />
                 <ScaleDisplay scale={currentScale} scaleType={scaleType} intervals={currentIntervals} onNoteClick={handleNoteClick} />
                 <HarmonicFieldDisplay field={currentHarmonicField} rootNote={selectedKey} scaleType={scaleType} chordType={chordType} onChordClick={handleChordClick} />
@@ -144,62 +146,66 @@ const App: React.FC = () => {
           {modalState?.type === 'note' && modalState.content}
           {modalState?.type === 'chord' && (
             <div>
-              <div className="flex space-x-2 border-b border-gray-700 mb-4">
+              <div className="flex space-x-2 border-b border-slate-700 mb-4">
                 <button
                   onClick={() => setActiveTab('variations')}
-                  className={`px-4 py-2 font-semibold text-sm rounded-t-md focus:outline-none transition-colors duration-200 ${
+                  className={`relative px-4 py-2 font-semibold text-sm rounded-t-md focus:outline-none transition-colors duration-200 ${
                     activeTab === 'variations'
-                      ? 'bg-gray-700 text-blue-300'
-                      : 'text-gray-400 hover:bg-gray-700/50'
+                      ? 'text-sky-300'
+                      : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
                   }`}
                 >
                   Variações do Grau
+                  {activeTab === 'variations' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-400 rounded-full"></span>}
                 </button>
                 <button
                   onClick={() => setActiveTab('functions')}
-                  className={`px-4 py-2 font-semibold text-sm rounded-t-md focus:outline-none transition-colors duration-200 ${
+                  className={`relative px-4 py-2 font-semibold text-sm rounded-t-md focus:outline-none transition-colors duration-200 ${
                     activeTab === 'functions'
-                      ? 'bg-gray-700 text-blue-300'
-                      : 'text-gray-400 hover:bg-gray-700/50'
+                      ? 'text-sky-300'
+                      : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
                   }`}
                 >
                   Funções do Acorde
+                   {activeTab === 'functions' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-400 rounded-full"></span>}
                 </button>
               </div>
 
               {activeTab === 'variations' ? (
-                <table className="w-full text-left text-gray-300">
-                  <thead className="text-xs text-blue-300 uppercase bg-gray-700/50">
-                    <tr>
-                      <th className="px-4 py-3">Escala/Modo</th>
-                      <th className="px-4 py-3">Tríade</th>
-                      <th className="px-4 py-3">Tétrade</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {modalState.variationAnalysis.map((res, i) => (
-                      <tr key={i} className="border-b border-gray-700 hover:bg-gray-700/50">
-                        <td className="px-4 py-3 font-medium text-white">{c.SCALE_TYPE_NAMES[res.scaleType]}</td>
-                        <td className="px-4 py-3">{`${getChordName(res.triad)} (${res.triad.degree})`}</td>
-                        <td className="px-4 py-3">{`${getChordName(res.tetrad)} (${res.tetrad.degree})`}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-slate-300">
+                    <thead className="text-xs text-sky-300 uppercase bg-slate-800/50">
+                      <tr>
+                        <th className="px-4 py-3">Escala/Modo</th>
+                        <th className="px-4 py-3">Tríade</th>
+                        <th className="px-4 py-3">Tétrade</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-700">
+                      {modalState.variationAnalysis.map((res, i) => (
+                        <tr key={i} className="hover:bg-slate-700/50">
+                          <td className="px-4 py-3 font-medium text-white">{c.SCALE_TYPE_NAMES[res.scaleType]}</td>
+                          <td className="px-4 py-3">{`${getChordName(res.triad)} (${res.triad.degree})`}</td>
+                          <td className="px-4 py-3">{`${getChordName(res.tetrad)} (${res.tetrad.degree})`}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ) : (
-                <div>
+                <div className="overflow-x-auto">
                   {modalState.functionAnalysis.length > 0 ? (
-                    <table className="w-full text-left text-gray-300">
-                      <thead className="text-xs text-blue-300 uppercase bg-gray-700/50">
+                    <table className="w-full text-left text-slate-300">
+                      <thead className="text-xs text-sky-300 uppercase bg-slate-800/50">
                         <tr>
                           <th className="px-4 py-3">Tonalidade</th>
                           <th className="px-4 py-3">Escala/Modo</th>
                           <th className="px-4 py-3">Grau</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody className="divide-y divide-slate-700">
                         {modalState.functionAnalysis.map((res, i) => (
-                          <tr key={i} className="border-b border-gray-700 hover:bg-gray-700/50">
+                          <tr key={i} className="hover:bg-slate-700/50">
                             <td className="px-4 py-3 font-medium text-white">{res.key}</td>
                             <td className="px-4 py-3">{res.scale}</td>
                             <td className="px-4 py-3">{res.degree}</td>
@@ -216,7 +222,7 @@ const App: React.FC = () => {
           )}
         </AnalysisModal>
 
-        <footer className="text-center mt-8 sm:mt-12 text-gray-500 text-sm">
+        <footer className="text-center mt-auto pt-8 sm:pt-12 text-slate-500 text-sm">
             <p>&copy; {new Date().getFullYear()} Tonalia. Uma ferramenta para músicos.</p>
         </footer>
       </main>
